@@ -1,7 +1,7 @@
 {
   "name": "geoserver-rest",
   "version": "0.9.0",
-  "description": "API ...",
+  "description": "API for connection between Geoserver and Nodejs",
   "main": "main.js",
   "scripts": {
     "dev": "nodemon --inspect main.js --exec babel-node",
@@ -10,7 +10,7 @@
     "docs": "apidoc -i routes/doc -o public/doc"
   },
   "apidoc": {
-    "name": "Documentation of API Geoserver REST with Nodejs",
+    "name": "Documentation of API Geoserver REST",
     "template": {
       "forceLanguage": "en"
     }

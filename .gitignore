@@ -3,3 +3,4 @@ package-lock.json
 /public
 /__test__/resultado
 /logs
+/_config/environment.js

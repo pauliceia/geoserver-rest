@@ -15,9 +15,9 @@
 3) npm install
 4) create _config/environment.js (example parameters: _config/environment-test.js)
 
-**DOCUMENTATION**:
- - npm run docs
- - access the file index.html (public/doc/)
+ - **DOCUMENTATION**:
+    - npm run docs
+    - access the file index.html (public/doc/)
 
 ### Running
 1) npm run dev

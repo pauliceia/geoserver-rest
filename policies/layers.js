@@ -3,18 +3,24 @@ import Joi from 'joi';
 module.exports = {
     get: {
         params: {
-            workspace: Joi.string().required(),
-            datastore: Joi.string().required()
+            workspace: Joi.string().regex(/[a-zA-Z]/).required(),
+            datastore: Joi.string().regex(/[a-zA-Z]/).required()
         }
     },
     publish: {
         body: {
-            name: Joi.string().regex(/[a-zA-Z]/).required()
+            workspace: Joi.string().regex(/[a-zA-Z]/).required(),
+            datastore: Joi.string().regex(/[a-zA-Z]/).required(),
+            layer: Joi.string().regex(/[a-zA-Z]/).required(),
+            description: Joi.string().regex(/[a-zA-Z]/).required(),
+            projection: Joi.string().regex(/[a-zA-Z]/).required()
         }
     },
     remove: {
         params:{
-            name: Joi.string().regex(/[a-zA-Z]/).required()
+            workspace: Joi.string().regex(/[a-zA-Z]/).required(),
+            datastore: Joi.string().regex(/[a-zA-Z]/).required(),
+            layer: Joi.string().regex(/[a-zA-Z]/).required()
         }
     }
 };

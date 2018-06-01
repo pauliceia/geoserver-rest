@@ -9,6 +9,7 @@ module.exports = (app, environment) => {
     const Layer = new LayersController();
 
     app.get(environment.pathBase + "/layers/:workspace/:datastore",
+        validate(policiesLayers.get),    
         (req, res) => Layer.layers({ 
                 workspace: req.params.workspace,
                 datastore: req.params.datastore 
@@ -19,7 +20,7 @@ module.exports = (app, environment) => {
     app.post(environment.pathBase + "/layer/publish", 
         validate(policiesLayers.publish), 
         (req, res) => Layer.publish(req.body)
-            .then( _ => res.status(201).send({success: true}))
+            .then( _ => res.status(201).send())
             .catch(error => res.status(error.status).send({ error: error.errors })));
 
     app.delete(environment.pathBase + "/layer/remove/:name",

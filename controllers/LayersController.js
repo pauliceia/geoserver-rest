@@ -25,7 +25,6 @@ export class LayersController {
                 }
             }
 
-            console.log(options)
             request(options, (err, resp, body) => {
                 if(!err && resp.statusCode == 200) {
                     resolve(JSON.parse(body))
@@ -51,47 +50,61 @@ export class LayersController {
         })
     }
 
-    publish = async function(layerInfo){
+    publish = function(infos){
         return new Promise( (resolve, reject) => {
-            try{
-                let bodyXML = `<featureType> 
-                    <name>layer_1001</name> 
-                    <nativeName>layer_1001</nativeName>
-                    <description>publicacao teste layer</description>
-                    <srs>EPSG:4326</srs>
-                    <store class="dataStore">
-                        <name>database</name>
-                    </store>
-                </featureType>`
+            let { workspace, datastore, layer, description, projection } = infos
 
-                let options = {
-                    url: 'http://localhost:8080/geoserver/rest/workspaces/Pauliceia/datastores/database/featuretypes.xml',
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "text/xml",
-                        "Content-Length": bodyXML.length
-                    },
-                    auth: {
-                        'user': 'admin',
-                        'pass': 'geoserver'
-                    },
-                    body: bodyXML
-                }
+            let bodyXML = `<featureType>
+                <name>${layer}</name>
+                <nativeName>${layer}</nativeName>
+                <description>${description}</description>
+                <srs>${projection.replace(" ", "")}</srs>
+                <store class="dataStore">
+                    <name>${datastore}</name>
+                </store>
+            </featureType>`
 
-                request(options, (err, resp, body) => {
-                    if(!err) {
-                        console.log(body)
-                        resolve('ok')
-
-                    } else {
-                        //console.log(resp)
-                        throw(err)
-                    }
-                })
-
-            } catch(err) {
-                reject(err)
+            let options = {
+                url: `${environment.geoserver.url}/rest/workspaces/${workspace}/datastores/${datastore}/featuretypes.xml`,
+                method: 'POST',
+                headers: {
+                    "Content-Type": "text/xml",
+                    "Content-Length": bodyXML.length
+                },
+                auth: {
+                    'user': environment.geoserver.user,
+                    'pass': environment.geoserver.password
+                },
+                body: bodyXML.replace(/(\r\n\t|\n|\r\t)/gm,"")
             }
+
+            request(options, (err, resp, body) => {
+                if(!err && !body) {
+                    resolve()
+
+                } else if(!err){
+                    logger.error(body)
+                    let message
+                    if(resp.statusCode == 400) message = "layer not found"
+                    else message = body
+
+                    reject({
+                        status: 404,
+                        errors: [{
+                            messages: [message]
+                        }]
+                    })
+
+                } else{
+                    logger.error(err)
+                    reject({
+                        status: 500,
+                        errors: [{
+                            messages: ["ERRO: connection with geoserver"]
+                        }]
+                    })
+                }
+            })
         })
     }
 

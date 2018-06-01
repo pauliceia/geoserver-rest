@@ -8,6 +8,11 @@ const environment = {
     enableHTTPS: process.env.ENABLE_HTTPS || false,
     certificate: process.env.CERT_FILE || '',
     key: process.env.CERT_KEY_FILE || ''
+  },
+  geoserver: {
+    url: process.env.URL_GEOSERVER || 'http://localhost:8080/geoserver',
+    user: process.env.USER_GEOSERVER || 'admin',
+    password: process.env.PASS_GEOSERVER || 'geoserver'
   }
 }
 

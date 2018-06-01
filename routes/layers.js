@@ -23,10 +23,14 @@ module.exports = (app, environment) => {
             .then( _ => res.status(201).send())
             .catch(error => res.status(error.status).send({ error: error.errors })));
 
-    app.delete(environment.pathBase + "/layer/remove/:name",
+    app.delete(environment.pathBase + "/layer/remove/:workspace/:datastore/:layer",
         validate(policiesLayers.remove),
-        (req, res) => Layer.remove(req.params.name)
-            .then( _ => res.status(200).send({success: true}))
+        (req, res) => Layer.remove({ 
+                workspace: req.params.workspace,
+                datastore: req.params.datastore,
+                layer: req.params.layer
+            })
+            .then( _ => res.status(200).send())
             .catch(error => res.status(error.status).send({ error: error.errors })));
 
 }

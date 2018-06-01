@@ -95,7 +95,7 @@ export class LayersController {
                         }]
                     })
 
-                } else{
+                } else {
                     logger.error(err)
                     reject({
                         status: 500,
@@ -108,15 +108,53 @@ export class LayersController {
         })
     }
 
-    remove = async function(name){
+    remove = async function(params){
         return new Promise( (resolve, reject) => {
-            try{
-                console.log(layerInfo)
-                resolve('ok')
-
-            } catch(err) {
-                reject(err)
+            let options = {
+                url: `${environment.geoserver.url}/rest/layers/${params.workspace}:${params.layer}.xml`,
+                auth: {
+                    'user': environment.geoserver.user,
+                    'pass': environment.geoserver.password
+                },
+                method: 'DELETE'
             }
+
+            request(options, (err, resp, body) => {
+
+                let options = {
+                    url: `${environment.geoserver.url}/rest/workspaces/${params.workspace}/datastores/${params.datastore}/featuretypes/${params.layer}.xml`,
+                    auth: {
+                        'user': environment.geoserver.user,
+                        'pass': environment.geoserver.password
+                    },
+                    method: 'DELETE'
+                }
+
+                request(options, (err, resp, body) => {
+                    if(!err && !body) {
+                        resolve()
+
+                    } else if(!err){
+                        logger.error(body)
+                        reject({
+                            status: 404,
+                            errors: [{
+                                messages: [body]
+                            }]
+                        })
+
+                    } else {
+                        logger.error(err)
+                        reject({
+                            status: 500,
+                            errors: [{
+                                messages: ["ERRO: connection with geoserver"]
+                            }]
+                        })
+                    }
+                })
+
+            })
         })
     }
 }

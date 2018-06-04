@@ -5,7 +5,7 @@ if(!fs.existsSync('logs')){
     fs.mkdirSync('logs')
 }
 
-const logger = new winston.createLogger({
+const logger = winston.createLogger({
     format: winston.format.combine(
         winston.format.timestamp({
             format: 'YYYY-MM-DD HH:mm:ss'

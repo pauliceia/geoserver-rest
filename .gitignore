@@ -4,3 +4,4 @@ package-lock.json
 /__test__/resultado
 /logs
 /_config/environment.js
+routes/.Rhistory

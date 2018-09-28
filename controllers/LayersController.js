@@ -53,7 +53,12 @@ export class LayersController {
     publish = function(infos){
         return new Promise( (resolve, reject) => {
             let { workspace, datastore, layer, description, projection } = infos
-
+            
+            //CHAMA A FUNÇÃO THIS.LAYERS({
+            //  workspace,
+            //  datastore
+            // })
+            //verificar se existe a 'layer' na lista de publicadas, caso exista: não faz nada (resolve())
             let bodyXML = `<featureType>
                 <name>${layer}</name>
                 <nativeName>${layer}</nativeName>

@@ -13,6 +13,19 @@ function x2js(xml) {
     })
 }
 
+function was_layer_already_published_in_workspace_datastore(workspace, datastore, layer){
+    let list_published_layers = this.layers({workspace, datastore})
+
+    for (let i=0; i<list_published_layers.length; i++){
+        let layer_name = list_published_layers["featureTypes"]["featureType"][0]["name"]
+        // if the layer was already published, so return True
+        if (layer_name == layer)
+            return True
+    }
+
+    return False
+}
+
 export class LayersController {
 
     layers = function(params){
@@ -53,12 +66,18 @@ export class LayersController {
     publish = function(infos){
         return new Promise( (resolve, reject) => {
             let { workspace, datastore, layer, description, projection } = infos
-            
-            //CHAMA A FUNÇÃO THIS.LAYERS({
+
+            //Beto: CHAMA A FUNÇÃO THIS.LAYERS({
             //  workspace,
             //  datastore
             // })
             //verificar se existe a 'layer' na lista de publicadas, caso exista: não faz nada (resolve())
+
+            // if the layer was already published, so unpublish it before publising it, because the table structure can change
+            if (was_layer_already_published_in_workspace_datastore(workspace, datastore, layer))
+                this.remove({workspace, datastore, layer})
+
+            // now publish the layer again
             let bodyXML = `<featureType>
                 <name>${layer}</name>
                 <nativeName>${layer}</nativeName>
